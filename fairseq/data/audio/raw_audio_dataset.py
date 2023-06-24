@@ -295,8 +295,7 @@ class FileAudioDataset(RawAudioDataset):
         self.set_bucket_info(num_buckets)
 
     def __getitem__(self, index):
-        # import soundfile as sf
-        import torchaudio
+        import soundfile as sf
 
         fn = self.fnames[index]
         fn = fn if isinstance(self.fnames, list) else fn.as_py()
@@ -309,12 +308,10 @@ class FileAudioDataset(RawAudioDataset):
             path_or_fp = io.BytesIO(byte_data)
 
         retry = 3
-        sig = None
+        wav = None
         for i in range(retry):
             try:
-                # wav, curr_sample_rate = sf.read(path_or_fp, dtype="float32")
-                sig, sr = torchaudio.load(path_or_fp)
-                sig = torchaudio.functional.resample(sig, sr, 16_000)
+                wav, curr_sample_rate = sf.read(path_or_fp, dtype="float32")
                 break
             except Exception as e:
                 logger.warning(
@@ -322,11 +319,11 @@ class FileAudioDataset(RawAudioDataset):
                 )
                 time.sleep(1 * i)
 
-        if sig is None:
+        if wav is None:
             raise Exception(f"Failed to load {path_or_fp}")
 
-        # feats = torch.from_numpy(wav).float()
-        feats = self.postprocess(sig[0], 16_000)
+        feats = torch.from_numpy(wav).float()
+        feats = self.postprocess(feats, curr_sample_rate)
 
         v = {"id": index, "source": feats}
 
