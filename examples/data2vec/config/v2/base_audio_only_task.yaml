@@ -3,7 +3,7 @@
 common:
   fp16: true
   log_format: json
-  log_interval: 200
+  log_interval: 20
   tensorboard_logdir: tb
   min_loss_scale: 1e-6
   fp16_no_flatten_grads: false
@@ -25,14 +25,13 @@ task:
 
 dataset:
   num_workers: 6
-  max_tokens: 1000000
+  max_tokens: 600000
   skip_invalid_size_inputs_valid_test: true
   validate_interval: 5
   required_batch_size_multiple: 1
-  disable_validation: true
 
 distributed_training:
-  distributed_world_size: 8
+  distributed_world_size: 1
   ddp_backend: legacy_ddp
 
 criterion:
@@ -49,6 +48,7 @@ optimization:
   max_update: 400000
   lr: [0.00075]
   debug_param_names: true
+  update_freq: [8]
 
 optimizer:
   _name: adam
