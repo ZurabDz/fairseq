@@ -1,0 +1,1 @@
+## Gonna implement anything that is required to attempt and pretrain/finetune data2vec2 on common voice dataset. On RTX 2070 super
