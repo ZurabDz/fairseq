@@ -13,7 +13,8 @@ import os
 import random
 
 # Adding support for mp3 files
-import torchaudio
+# import torchaudio
+import librosa
 # Adding paralellism and progress bar
 import mpire 
 
@@ -46,7 +47,8 @@ def get_parser():
     return parser
 
 def get_audio_frames(fname: str) -> int:
-   sig, sr = torchaudio.load(fname)
+#    sig, sr = torchaudio.load(fname)
+   sig, sr = librosa.load(fname, sr=16_000)
 
    # FIXME: This might not be an int and dont wanna // right now
    return {'fname': fname, 'n_frames': sig.shape[-1]}  
